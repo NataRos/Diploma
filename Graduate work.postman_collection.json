@@ -1,0 +1,1241 @@
+{
+	"info": {
+		"_postman_id": "57d10fde-d60d-4376-b303-9662b0edb1d1",
+		"name": "Graduate work",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6834479"
+	},
+	"item": [
+		{
+			"name": "/words endpoint",
+			"item": [
+				{
+					"name": "Error cases",
+					"item": [
+						{
+							"name": "ER-1-1 \"2 words\"",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function(){\r",
+											"    pm.expect(pm.response).has.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is correct\", function(){\r",
+											"    pm.expect(pm.response.json().message).equals(\"word not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/words/hello world",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"words",
+										"hello world"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ER-1-2 \"non-latin\"",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function(){\r",
+											"    pm.expect(pm.response).has.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is correct\", function(){\r",
+											"    pm.expect(pm.response.json().message).equals(\"word not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/words/γεια",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"words",
+										"γεια"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ER-1-3 \"empty request\"",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function(){\r",
+											"    pm.expect(pm.response).has.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is correct\", function(){\r",
+											"    pm.expect(pm.response.json().message).equals(\"Word is required.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/words/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"words",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ER-1-4 \"word with syntax error\"",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function(){\r",
+											"    pm.expect(pm.response).has.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is correct\", function(){\r",
+											"    pm.expect(pm.response.json().message).equals(\"word not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/words/helloo",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"words",
+										"helloo"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"pm.test(\"Success is false\", function(){",
+									"    pm.expect(pm.response.json().success).equals(false);",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Positive cases",
+					"item": [
+						{
+							"name": "With syllables",
+							"item": [
+								{
+									"name": "TC-1-1, TC-1-10, TC-1-12 \"a noun\" with several definitionals and capital symbols",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has several results\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(9);\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].definition).equals(\"the physical object that is the product of a newspaper publisher\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].partOfSpeech).equals(\"noun\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right synonyms\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].synonyms.length).equals(1) && pm.expect(pm.response.json().results[0].synonyms[0]).equals(\"newspaper\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right syllables\", function(){\r",
+													"    pm.expect(pm.response.json().syllables.count).equals(2) && pm.expect(pm.response.json().syllables.list[0]).equals(\"pa\") && pm.expect(pm.response.json().syllables.list[1]).equals(\"per\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation.all).equals(\"'peɪpər\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/PAPER",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"PAPER"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TC-1-2 \"an adjective\"",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has several results\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(8);\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].definition).equals(\"of the color intermediate between green and orange in the color spectrum; of something resembling the color of an egg yolk\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].partOfSpeech).equals(\"adjective\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right synonyms\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].synonyms.length).equals(2) && pm.expect(pm.response.json().results[0].synonyms[0]).equals(\"xanthous\") && pm.expect(pm.response.json().results[0].synonyms[1]).equals(\"yellowish\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right similarTo\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].similarTo.length).equals(1) && pm.expect(pm.response.json().results[0].similarTo[0]).equals(\"chromatic\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right derivation\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].derivation.length).equals(1) && pm.expect(pm.response.json().results[0].derivation[0]).equals(\"yellowness\");\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Has right syllables\", function(){\r",
+													"    pm.expect(pm.response.json().syllables.count).equals(2) && pm.expect(pm.response.json().syllables.list[0]).equals(\"yel\") && pm.expect(pm.response.json().syllables.list[1]).equals(\"low\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation.all).equals(\"'jɛloʊ\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/yellow",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"yellow"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TC-1-3 \"an adverb\"",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has several results\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(3);\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[2].definition).equals(\"used as a direction in music; to be played relatively softly\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[2].partOfSpeech).equals(\"adverb\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right synonyms\", function(){\r",
+													"    pm.expect(pm.response.json().results[2].synonyms.length).equals(1) && pm.expect(pm.response.json().results[2].synonyms[0]).equals(\"piano\");\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right syllables\", function(){\r",
+													"    pm.expect(pm.response.json().syllables.count).equals(2) && pm.expect(pm.response.json().syllables.list[0]).equals(\"soft\") && pm.expect(pm.response.json().syllables.list[1]).equals(\"ly\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation.all).equals(\"'sɑftli\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/softly",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"softly"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TC-1-4, TC-1-9, TC-1-11 \"a pronoun\", \"1 definition\", \"1 syllable\"",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has 1 result\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(1);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].definition).equals(\"This or that female; the woman understood or referred to; the animal of the female sex, or object personified as feminine, which was spoken of.\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].partOfSpeech).equals(\"pronoun\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right rhymes\", function(){\r",
+													"    pm.expect(pm.response.json().rhymes.all).equals(\"-i\");\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right derivation\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].derivation.length).equals(6) && pm.expect(pm.response.json().results[0].derivation[0]).equals(\"hers\") && pm.expect(pm.response.json().results[0].derivation[1]).equals(\"her\")  && pm.expect(pm.response.json().results[0].derivation[2]).equals(\"they\") && pm.expect(pm.response.json().results[0].derivation[3]).equals(\"their\") && pm.expect(pm.response.json().results[0].derivation[4]).equals(\"theirs\") && pm.expect(pm.response.json().results[0].derivation[5]).equals(\"them\");\r",
+													"});\r",
+													"\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right syllables\", function(){\r",
+													"    pm.expect(pm.response.json().syllables.count).equals(1) && pm.expect(pm.response.json().syllables.list[0]).equals(\"she\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation).equals(\"ʃi\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/she",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"she"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TC-1-5, \"a preposition\"",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has 1 result\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(1);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].definition).equals(\"In a general sense, from, or out from; proceeding from; belonging to; relating to; concerning; -- used in a variety of applications.\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].partOfSpeech).equals(\"preposition\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right rhymes\", function(){\r",
+													"    pm.expect(pm.response.json().rhymes.all).equals(\"-əv\");\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right syllables\", function(){\r",
+													"    pm.expect(pm.response.json().syllables.count).equals(1) && pm.expect(pm.response.json().syllables.list[0]).equals(\"of\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation).equals(\"ʌv\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/of",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"of"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TC-1-6, \"a conjunction\"",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has 1 result\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(1);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].definition).equals(\"Upon any less condition than (the fact or thing stated in the sentence or clause which follows); if not; supposing that not; if it be not; were it not that; except.\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right examples\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].examples[0]).equals(\"we shall fail unless we are industrious\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].partOfSpeech).equals(\"conjunction\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right rhymes\", function(){\r",
+													"    pm.expect(pm.response.json().rhymes.all).equals(\"-ɛs\");\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right syllables\", function(){\r",
+													"    pm.expect(pm.response.json().syllables.count).equals(2) && pm.expect(pm.response.json().syllables.list[0]).equals(\"un\") && pm.expect(pm.response.json().syllables.list[1]).equals(\"less\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation).equals(\"ʌn'lɛs\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/unless",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"unless"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TC-1-7, \"a interjection\"",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has a result\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(1);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].definition).equals(\"???\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].partOfSpeech).equals(\"conjunction\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right syllables\", function(){\r",
+													"    pm.expect(pm.response.json().syllables.count).equals(1) && pm.expect(pm.response.json().syllables.list[0]).equals(\"ugh\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation).equals(\"ʌɡ\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/Ugh",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"Ugh"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TC-1-8, \"an article\"",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has a result\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(2);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right rhymes\", function(){\r",
+													"    pm.expect(pm.response.json().rhymes.all).equals(\"-ə\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].definition).equals(\"A word placed before nouns to limit or individualize their meaning.\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].partOfSpeech).equals(\"definite article\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right syllables\", function(){\r",
+													"    pm.expect(pm.response.json().syllables.count).equals(1) && pm.expect(pm.response.json().syllables.list[0]).equals(\"the\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation).equals(\"ðʌ\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/the",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"the"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Has syllables\", function(){",
+											"    pm.expect(pm.response.json().syllables).exist && pm.expect(pm.response.json().syllables.count).exist && pm.expect(pm.response.json().syllables.list).exist && pm.expect(pm.response.json().syllables.list.length).equals(pm.response.json().syllables.count);",
+											"});"
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "Without syllables",
+							"item": [
+								{
+									"name": "TC-11, \"one character length word\", without syllables",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Has a result\", function(){\r",
+													"    pm.expect(pm.response.json().results.length).equals(7);\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Has right definition\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].definition).equals(\"one of the four nucleotides used in building DNA; all four nucleotides have a common phosphate group and a sugar (ribose)\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right partOfSpeech\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].partOfSpeech).equals(\"noun\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right synonyms\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].synonyms.length).equals(1) && pm.expect(pm.response.json().results[0].synonyms[0]).equals(\"deoxyadenosine monophosphate\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right typeOf\", function(){\r",
+													"    pm.expect(pm.response.json().results[0].typeOf.length).equals(2) && pm.expect(pm.response.json().results[0].typeOf[0]).equals(\"nucleotide\") && \r",
+													"        pm.expect(pm.response.json().results[0].typeOf[1]).equals(\"base\")\r",
+													"    ;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Has right pronunciation\", function(){\r",
+													"    pm.expect(pm.response.json().pronunciation.all).equals(\"eɪ\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/words/A",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"words",
+												"A"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){",
+									"    pm.expect(pm.response).has.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has results\", function(){",
+									"    pm.expect(pm.response.json().results).exist && pm.expect(pm.response.json().results).not.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Has at least 1 definition\", function(){",
+									"    pm.expect(pm.response.json().results[0].definition).exist;",
+									"});",
+									"",
+									"pm.test(\"Has part of speech\", function(){",
+									"    pm.expect(pm.response.json().results[0].partOfSpeech).exist;",
+									"});",
+									"",
+									"",
+									"",
+									"pm.test(\"Has pronunciation\", function(){",
+									"    pm.expect(pm.response.json().pronunciation).exist && pm.expect(pm.response.json().pronunciation).not.empty;",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Detail endpoint",
+			"item": [
+				{
+					"name": "TC-2-1 /definitions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has several definitions\", function(){\r",
+									"    pm.expect(pm.response.json().definitions.length).equals(8);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right definitions\", function(){\r",
+									"    pm.expect(pm.response.json().definitions[0].definition).equals(\"of the color intermediate between green and orange in the color spectrum; of something resembling the color of an egg yolk\")\r",
+									"    && pm.expect(pm.response.json().definitions[0].partOfSpeech).equals(\"adjective\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/yellow/definitions",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"yellow",
+								"definitions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-2 /synonyms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has several synonyms\", function(){\r",
+									"    pm.expect(pm.response.json().synonyms.length).equals(15);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right synonyms\", function(){\r",
+									"    pm.expect(pm.response.json().synonyms[0]).equals(\"mesa\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[1]).equals(\"tabular array\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[2]).equals(\"tabularise\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[3]).equals(\"tabularize\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[4]).equals(\"tabulate\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[5]).equals(\"board\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[6]).equals(\"defer\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[7]).equals(\"hold over\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[8]).equals(\"postpone\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[9]).equals(\"prorogue\") &&\r",
+									"    pm.expect(pm.response.json().synonyms[10]).equals(\"put off\") &&   \r",
+									"    pm.expect(pm.response.json().synonyms[11]).equals(\"put over\") &&   \r",
+									"    pm.expect(pm.response.json().synonyms[12]).equals(\"remit\") &&   \r",
+									"    pm.expect(pm.response.json().synonyms[13]).equals(\"set back\") &&   \r",
+									"    pm.expect(pm.response.json().synonyms[14]).equals(\"shelve\")   \r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/table/synonyms",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"table",
+								"synonyms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-3 /antonyms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has antonyms\", function(){\r",
+									"    pm.expect(pm.response.json().antonyms.length).equals(1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right definitions\", function(){\r",
+									"    pm.expect(pm.response.json().antonyms[0]).equals(\"good\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/bad/antonyms",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"bad",
+								"antonyms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-4 /examples",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has examples\", function(){\r",
+									"    pm.expect(pm.response.json().examples.length).equals(4);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right examples\", function(){\r",
+									"    pm.expect(pm.response.json().examples[0]).equals(\"National leaders will have to display the highest skills of statesmanship\") &&\r",
+									"    pm.expect(pm.response.json().examples[1]).equals(\"made a display of strength\") &&\r",
+									"    pm.expect(pm.response.json().examples[2]).equals(\"a display of emotion\") &&\r",
+									"    pm.expect(pm.response.json().examples[3]).equals(\"a display of courage\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/display/examples",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"display",
+								"examples"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-5 /typeOf",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has examples\", function(){\r",
+									"    pm.expect(pm.response.json().typeOf.length).equals(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right examples\", function(){\r",
+									"    pm.expect(pm.response.json().typeOf[0]).equals(\"correctional institution\") &&\r",
+									"    pm.expect(pm.response.json().typeOf[1]).equals(\"create verbally\") &&\r",
+									"    pm.expect(pm.response.json().typeOf[2]).equals(\"enclosure\") &&\r",
+									"    pm.expect(pm.response.json().typeOf[3]).equals(\"writing implement\") &&\r",
+									"    pm.expect(pm.response.json().typeOf[4]).equals(\"swan\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/pen/typeOf",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"pen",
+								"typeOf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-6 /hasTypes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has examples\", function(){\r",
+									"    pm.expect(pm.response.json().hasTypes.length).equals(29);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right examples\", function(){\r",
+									"    pm.expect(pm.response.json().hasTypes[0]).equals(\"split\") &&\r",
+									"    pm.expect(pm.response.json().hasTypes[1]).equals(\"ampul\") &&\r",
+									"    pm.expect(pm.response.json().hasTypes[2]).equals(\"ampule\") &&\r",
+									"    pm.expect(pm.response.json().hasTypes[3]).equals(\"beer bottle\") &&\r",
+									"    pm.expect(pm.response.json().hasTypes[4]).equals(\"calabash\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/bottle/hasTypes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"bottle",
+								"hasTypes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-7 /partOf",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has examples\", function(){\r",
+									"    pm.expect(pm.response.json().partOf.length).equals(3);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right examples\", function(){\r",
+									"    pm.expect(pm.response.json().partOf[0]).equals(\"steering mechanism\") &&\r",
+									"    pm.expect(pm.response.json().partOf[1]).equals(\"steering system\") &&\r",
+									"    pm.expect(pm.response.json().partOf[2]).equals(\"wheeled vehicle\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/wheel/partOf",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"wheel",
+								"partOf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-8 /hasParts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has examples\", function(){\r",
+									"    pm.expect(pm.response.json().hasParts.length).equals(59);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right examples\", function(){\r",
+									"    pm.expect(pm.response.json().hasParts[0]).equals(\"low gear\") &&\r",
+									"    pm.expect(pm.response.json().hasParts[1]).equals(\"first gear\") &&\r",
+									"    pm.expect(pm.response.json().hasParts[2]).equals(\"floorboard\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/car/hasParts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"car",
+								"hasParts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-9 /instanceOf",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has examples\", function(){\r",
+									"    pm.expect(pm.response.json().instanceOf.length).equals(1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right examples\", function(){\r",
+									"    pm.expect(pm.response.json().instanceOf[0]).equals(\"poet\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/Pushkin/instanceOf",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"Pushkin",
+								"instanceOf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC-2-10 /hasInstances",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Has examples\", function(){\r",
+									"    pm.expect(pm.response.json().hasInstances.length).equals(335);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has right examples\", function(){\r",
+									"    pm.expect(pm.response.json().hasInstances[0]).equals(\"alfred edward housman\") &&\r",
+									"    pm.expect(pm.response.json().hasInstances[1]).equals(\"alfred lord tennyson\") &&\r",
+									"    pm.expect(pm.response.json().hasInstances[2]).equals(\"alfred noyes\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/words/poet/hasInstances",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"words",
+								"poet",
+								"hasInstances"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){",
+							"    pm.expect(pm.response).has.status(200);",
+							"});"
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{apiKeyValue}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "{{apiKey}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Reply time is fast\", function(){",
+					"    pm.expect(pm.response.responseTime).below(1000);",
+					"});",
+					"",
+					"pm.test(\"Has response and not empty\", function(){",
+					"    pm.expect(pm.response).exist && pm.expect(pm.response).not.empty;",
+					"});",
+					""
+				]
+			}
+		}
+	]
+}
